@@ -1,0 +1,35 @@
+.edit-content-bar{
+  height: 1rem;
+  overflow: hidden;
+  display: flex;
+  padding: 0.2rem 0px;
+  margin: 0.2rem 0px;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  transition: height 1s;
+}
+.noDisplay{
+  height: 0px;
+  overflow: hidden;
+}
+
+.edit-content-bar button{
+  border: none;
+  min-width: 1rem;
+  height: 100%;
+  border-radius: 3px;
+  margin: 0.1rem;
+  font-size: 0.5rem;
+  transition: width 0.5s;
+}
+
+.edit-content-bar .addOptionContent{
+  background-color: darkseagreen;
+}
+.edit-content-bar .addTextContent{
+  background-color: lightyellow;
+}
+.edit-content-bar .removeContent{
+  background-color: lightpink;
+}

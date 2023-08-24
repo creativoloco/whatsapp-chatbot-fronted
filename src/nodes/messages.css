@@ -1,0 +1,33 @@
+.node-content{
+  padding: 0.7rem;
+  background: white;
+  min-height: 50px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #0005;
+}
+
+.node-content .field{
+  position: relative;
+  margin: 0.5rem 0px;
+}
+
+.node-content input,
+.node-content textarea{
+  font-family: sans-serif;
+  font-size: 0.7rem;
+  box-sizing: border-box;
+  width: 100%;
+  display: block;
+}
+
+.node-content textarea{
+  height: 5rem;
+  border: 1px solid #DDD;
+}
+
+.node-content label{
+  display: block;
+  color: #777;
+  font-size: 0.7rem;
+}
