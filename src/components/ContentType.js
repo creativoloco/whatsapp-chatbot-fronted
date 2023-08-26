@@ -16,75 +16,59 @@ const selector = id => store => ({
 })
 
 
-const EditContentBar = ({
-    parentID,
-    contentID = null,
-    toogleEditable, 
-    editable}) => {
+const EditContentBar = ({ parentID, contentID = null, }) => {
     const { addContent, removeContent } = useStore(selector(parentID), shallow)
 
     return(
         <div className="edit-content-bar" >
             <button
-                className='editContent'
-                onClick={toogleEditable}
+                className='insertContent'
+                onClick={addContent}
+                data-type="option"
+                data-content-id={contentID}
             >
-                <img src="edit-icon.svg"/>
-                <span className='labelText'> { editable ? "editing...": "edit"}</span>
+                <img src="insert-option-icon.svg"/>
+                <span className='labelText'> move up</span>
+            </button>
+            <button
+                className='insertContent'
+                onClick={addContent}
+                data-type="option"
+                data-content-id={contentID}
+            >
+                <img src="insert-option-icon.svg"/>
+                <span className='labelText'> move down</span>
+            </button>
+            <button
+                className='insertContent'
+                onClick={addContent}
+                data-type="option"
+                data-content-id={contentID}
+            >
+                <img src="insert-option-icon.svg"/>
+                <span className='labelText'> insert option</span>
+            </button>
+            <button
+                className='insertContent'
+                onClick={addContent}
+                data-type="text"
+                data-content-id={contentID}
+            >
+                <img src="insert-text-icon.svg"/>
+                <span className='labelText'> insert text</span>
+            </button>
+            <button
+                className='insertContent'
+                onClick={addContent}
+                data-type="text"
+                data-content-id={contentID}
+            >
+                <img src="insert-image-icon.svg"/>
+                <span className='labelText'> insert image bello</span>
             </button>
             {
-                !editable
-                    && <>
-                        <button
-                            className='insertContent'
-                            onClick={addContent}
-                            data-type="option"
-                            data-content-id={contentID}
-                        >
-                            <img src="insert-option-icon.svg"/>
-                            <span className='labelText'> move up</span>
-                        </button>
-                        <button
-                            className='insertContent'
-                            onClick={addContent}
-                            data-type="option"
-                            data-content-id={contentID}
-                        >
-                            <img src="insert-option-icon.svg"/>
-                            <span className='labelText'> move down</span>
-                        </button>
-                        <button
-                            className='insertContent'
-                            onClick={addContent}
-                            data-type="option"
-                            data-content-id={contentID}
-                        >
-                            <img src="insert-option-icon.svg"/>
-                            <span className='labelText'> insert option</span>
-                        </button>
-                        <button
-                            className='insertContent'
-                            onClick={addContent}
-                            data-type="text"
-                            data-content-id={contentID}
-                        >
-                            <img src="insert-text-icon.svg"/>
-                            <span className='labelText'> insert text</span>
-                        </button>
-                        <button
-                            className='insertContent'
-                            onClick={addContent}
-                            data-type="text"
-                            data-content-id={contentID}
-                        >
-                            <img src="insert-image-icon.svg"/>
-                            <span className='labelText'> insert image bello</span>
-                        </button>
-                    </>
-            }
-            {
-                contentID
-                    && <>
+                contentID &&
+                <>
                         <button
                             className='removeContent'
                             onClick={removeContent}
@@ -114,7 +98,9 @@ const Label = ({id,label})=>{
         </div>)
 }
 
-const TextContent = ({content, onSetContent,editable })=>{
+const TextContent = ({ content, onChangeContent })=>{
+    const [editable, setEditable] = useState( false )
+    
     return(
         <>
             {
@@ -122,28 +108,29 @@ const TextContent = ({content, onSetContent,editable })=>{
                     ?  <textarea
                         className='nodrag nowheel text-content'
                         name={content.id}
-                        data-type={content.type}
-                        data-content-id={content.id}
                         placeholder="add some text..."
                         value={content.data}
-                        onChange={onSetContent}
+                        onChange={onChangeContent}
                         autoComplete="off"
                         autoCorrect="off"
                         spellCheck={false}
+                        onBlur={()=>setEditable(false)}
                     />
-                    : <p className='text-content'>{content.data}</p>
+                    : <p
+                        className='text-content'
+                        onDoubleClick={()=>setEditable(true)}
+                    >{content.data}</p>
             }
         </>
     )
 }
 
-const OptionContent = ({content,onSetContent, editable})=>{
+const OptionContent = ({content,onChangeContent })=>{
     return (
         <>
             <TextContent
-                editable={editable}
                 content={content}
-                onSetContent={onSetContent}
+                onChangeContent={onChangeContent}
             />
             <Handle type="source" position={Position.Right} id={content.id}/>
         </>
@@ -152,31 +139,33 @@ const OptionContent = ({content,onSetContent, editable})=>{
 
 const DataContent = ({parentID, content})=>{
     const {setContent} = useStore( selector(parentID), shallow )
-    const [editable, setEditable] = useState( false )
+    const [contentData, setContentData] = useState(content)
+
+    const onChangeContent = e => setContentData( prev => ({
+        ...prev,
+        data: e.target.value
+    }))
+    
     return(
         <div className='field' >
             <label htmlFor={content.id}>{content.type} message:</label>
             {
                 (content.type == "text") &&
                     <TextContent
-                        editable={editable}
-                        content={content} 
-                        onSetContent={setContent}
+                        content={contentData} 
+                        onChangeContent={onChangeContent}
                     />
             }
             {
                 (content.type == "option") &&
                     <OptionContent
-                        editable={editable}
                         content={content}
-                        onSetContent={setContent}
+                        onChangeContent={onChangeContent}
                     />
             }
             <EditContentBar
                 parentID={parentID}
                 contentID={content.id}
-                toogleEditable={()=>setEditable(state=>!state)}
-                editable={editable}
             />
         </div>
     )
