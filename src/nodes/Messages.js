@@ -6,9 +6,9 @@ import './messages.css'
 
 const MessagesNodeType = ({id,data,selected})=>{
     const [ edit, setEdit ] = useState(false)
-
+    
     return(
-        <div className="node-content" >
+        <>
             <NodeToolbar isVisible={selected} position={Position.Top} >
                 <button
                     onClick={e=>setEdit(state=>!state)}
@@ -21,7 +21,7 @@ const MessagesNodeType = ({id,data,selected})=>{
                     <DataContent key={content.id} parentID={id} content={content}/>
                 )
             }
-        </div>
+        </>
     )
 }
 export default memo(MessagesNodeType)

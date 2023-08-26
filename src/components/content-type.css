@@ -1,35 +1,81 @@
 .edit-content-bar{
-  height: 1rem;
-  overflow: hidden;
+  width: 100%;
   display: flex;
   padding: 0.2rem 0px;
   margin: 0.2rem 0px;
   flex-direction: row;
-  justify-content: space-around;
-  width: 100%;
-  transition: height 1s;
+  justify-content: right;
 }
-.noDisplay{
-  height: 0px;
-  overflow: hidden;
-}
-
-.edit-content-bar button{
-  border: none;
-  min-width: 1rem;
-  height: 100%;
-  border-radius: 3px;
-  margin: 0.1rem;
+.edit-content-bar>button{
   font-size: 0.5rem;
-  transition: width 0.5s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: .8rem;
+  border: none;
+  border-radius: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0.1rem;
+  transition: flex-grow 2s;
+}
+.edit-content-bar>button>img{
+  height: 100%;
+}
+/*
+.edit-content-bar>button::first-letter{
+  color: #000F;
+}
+*/
+.edit-content-bar>button:hover{
+  flex-grow: 1;
+}
+.labelText{
+  background-color: white;
+  width: 0px;
+  text-indent: 100px;
+}
+.labelText:hover{
+  text-indent: 0px;
 }
 
-.edit-content-bar .addOptionContent{
+.edit-content-bar .editContent{
   background-color: darkseagreen;
 }
-.edit-content-bar .addTextContent{
+.edit-content-bar .insertContent{
   background-color: lightyellow;
 }
 .edit-content-bar .removeContent{
   background-color: lightpink;
+}
+
+.text-content{
+  all: unset;
+  border: none;
+  width: 100%;
+  border-left: 1px solid green;
+  cursor: text;
+  box-sizing: border-box;
+  display: block;
+  color: white;
+  padding: .5rem;
+  background-color: transparent;
+  font-family: sans-serif;
+  font-size: 0.7rem;
+  transition: background-color 0.5s;
+}
+input:hover, textarea:hover{
+  background-color: #444;
+}
+
+textarea{
+  resize: vertical;
+  overflow: scroll;
+  height: 5rem;
+}
+
+label{
+  font-size: 0.7rem;
+  color: #AAA;
 }

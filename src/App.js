@@ -9,6 +9,7 @@ import ReactFlow, {
 } from 'reactflow'
 
 import 'reactflow/dist/style.css'
+import './App.css'
 import {useStore} from './store'
 
 import MessagesNodeType from './nodes/Messages'
