@@ -16,29 +16,13 @@ const selector = id => store => ({
 })
 
 
-const EditContentBar = ({ parentID, contentID = null, }) => {
+const EditContentBar = ({ showBar, parentID, contentID = null, }) => {
     const { addContent, removeContent } = useStore(selector(parentID), shallow)
 
     return(
-        <div className="edit-content-bar" >
-            <button
-                className='insertContent'
-                onClick={addContent}
-                data-type="option"
-                data-content-id={contentID}
-            >
-                <img src="insert-option-icon.svg"/>
-                <span className='labelText'> move up</span>
-            </button>
-            <button
-                className='insertContent'
-                onClick={addContent}
-                data-type="option"
-                data-content-id={contentID}
-            >
-                <img src="insert-option-icon.svg"/>
-                <span className='labelText'> move down</span>
-            </button>
+        <div
+            className={ 'edit-content-bar' + (showBar ? '':' opacity-zero' ) }
+        >
             <button
                 className='insertContent'
                 onClick={addContent}
@@ -64,7 +48,7 @@ const EditContentBar = ({ parentID, contentID = null, }) => {
                 data-content-id={contentID}
             >
                 <img src="insert-image-icon.svg"/>
-                <span className='labelText'> insert image bello</span>
+                <span className='labelText'> insert image bellow</span>
             </button>
             {
                 contentID &&
@@ -128,10 +112,7 @@ const TextContent = ({ content, onChangeContent })=>{
 const OptionContent = ({content,onChangeContent })=>{
     return (
         <>
-            <TextContent
-                content={content}
-                onChangeContent={onChangeContent}
-            />
+            <TextContent content={content} onChangeContent={onChangeContent} />
             <Handle type="source" position={Position.Right} id={content.id}/>
         </>
     )
@@ -140,6 +121,7 @@ const OptionContent = ({content,onChangeContent })=>{
 const DataContent = ({parentID, content})=>{
     const {setContent} = useStore( selector(parentID), shallow )
     const [contentData, setContentData] = useState(content)
+    const [showBar, setShowBar] = useState(false)
 
     const onChangeContent = e => setContentData( prev => ({
         ...prev,
@@ -147,25 +129,38 @@ const DataContent = ({parentID, content})=>{
     }))
     
     return(
-        <div className='field' >
-            <label htmlFor={content.id}>{content.type} message:</label>
-            {
-                (content.type == "text") &&
-                    <TextContent
-                        content={contentData} 
-                        onChangeContent={onChangeContent}
-                    />
-            }
-            {
-                (content.type == "option") &&
-                    <OptionContent
-                        content={content}
-                        onChangeContent={onChangeContent}
-                    />
-            }
+        <div
+            className='data-content'
+            onMouseEnter={()=>setShowBar(true)}
+            onMouseLeave={()=>setShowBar(false)}
+        >
+            <div className={ 'data-content-move-bar' +
+                    (showBar ? '':' opacity-zero' ) }>
+                <button><img src="move-icon.svg"/></button>
+                <button><img src="move-icon.svg"/></button>
+            </div>
+            <div className='data-content-info'>
+                <label htmlFor={content.id}>{content.type} message:</label>
+                {
+                    (content.type == "text") &&
+                        <TextContent
+                            content={contentData} 
+                            onChangeContent={onChangeContent}
+                        />
+                }
+                {
+                    (content.type == "option") &&
+                        <OptionContent
+                            content={content}
+                            onChangeContent={onChangeContent}
+                        />
+                }
+
+            </div>
             <EditContentBar
                 parentID={parentID}
                 contentID={content.id}
+                showBar = {showBar}
             />
         </div>
     )
