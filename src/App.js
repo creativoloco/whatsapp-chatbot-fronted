@@ -19,6 +19,7 @@ const selector = (store) => ({
     edges: store.edges,
     onNodesChange: store.onNodesChange,
     onEdgesChange: store.onEdgesChange,
+    onNodeDragStop: store.onNodeDragStop,
     addEdge: store.addEdge,
     createNode: store.createNode,
     saveLocal: store.saveLocal,
@@ -38,22 +39,28 @@ const SaveRestore = () => {
     
     const onRestoreLocal = useCallback(()=>{
         const {x=0,y=0,zoom=1} = store.restoreLocal( )
-        setViewport( {x,y,zoom} )
+        setViewport( { x, y, zoom } )
     },[rfInstance])
-    
+
+    const onCreateNode = useCallback(e=>{
+        const vp = rfInstance.getViewport()
+        store.createNode(  vp  ) 
+    },[rfInstance])
+
     return (
         <ReactFlow
             nodes={store.nodes}
             edges={store.edges}
             onNodesChange={store.onNodesChange}
             onEdgesChange={store.onEdgesChange}
+            onNodeDragStop={store.onNodeDragStop}
             onConnect={store.addEdge}
             nodeTypes={nodeTypes}
             onInit={setRfInstance}
             fitView
         >
             <Panel position="top-right">
-                <button onClick={ store.createNode }>add node</button>
+                <button onClick={ onCreateNode }>add node</button>
                 <button onClick={ onSaveLocal }>save</button>
                 <button onClick={ onRestoreLocal }>restore</button>
             </Panel>
