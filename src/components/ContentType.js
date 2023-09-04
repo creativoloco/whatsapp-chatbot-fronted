@@ -1,8 +1,7 @@
-import {memo, useCallback, useEffect, useRef, useState} from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
+import { Handle, Position } from 'reactflow'
 import ReactPlayer from 'react-player'
-import {Handle,Position, useUpdateNodeInternals} from 'reactflow'
 
-import { useStore } from '../store'
 import './content-type.css'
 
 const ButtonEditBar = ({type})=>{
@@ -14,33 +13,29 @@ const ButtonEditBar = ({type})=>{
     )
 }
 
-const InsertContentBar = memo( ({
-    id,
-    insertContentCallback,
-    removeContentCallback
-}) => {
-    const onClickHandler = useCallback( e => {
-        const el =  (e.target.nodeName === "BUTTON" )
+const InsertContentBar = memo( ({ id, onInsert, onRemove }) => {
+    const onClick = useCallback( e => {
+        // get button element through event delegation
+        const element =  (e.target.nodeName === "BUTTON" )
             ? e.target
             : (e.target.parentElement.nodeName === "BUTTON")
                 ? e.target.parentElement
                 : null
         
-        if(!el) return
+        // could be empty if user just click parent element
+        if(!element) return
 
-        const type = el.dataset.type;
+        // remove or instert actions
+        const type = element.dataset.type;
+        if( type === "remove" ) onRemove( id )
+        else onInsert( id )( type )
 
-        if(type==="remove")
-            removeContentCallback( id )
-        else
-            insertContentCallback( id )( type )
-
-    },[ id ])
+    }, [ id ])
 
     return (
-        <div className='edit-content-bar' onClick={onClickHandler} >
-            <ButtonEditBar type="option"/>
+        <div className='edit-content-bar' onClick={onClick} >
             <ButtonEditBar type="text"  />
+            <ButtonEditBar type="option"/>
             <ButtonEditBar type="image" />
             <ButtonEditBar type="video" />
             <ButtonEditBar type="file"  />
@@ -49,76 +44,30 @@ const InsertContentBar = memo( ({
     )
 })
 
-const NodeTitle = memo(({ id, title })=>{
+const NodeTitle = memo(({ id, title, onChangeTitle })=>{
     return(
-        <div className='field'>
+        <div className='node-title'>
             <Handle id={ id } type="target" position={Position.Left} />
-            <label htmlFor={id}>Title:</label>
-            <p>{title}</p>
+            <label htmlFor={id}>
+                <TextContent id={id} data={title} onChangeData={onChangeTitle} />
+            </label>
         </div>)
 })
 
-const VideoContent = ({ content, onChangeData })=>{
-    const [editable, setEditable] = useState( false )
-    
+const VideoContent = ({ id, data, onChangeData })=>{
     return(
         <>
-            {
-                editable
-                    ?  <textarea
-                        className='nodrag nowheel text-content'
-                        name={content.id}
-                        placeholder="add some text..."
-                        value={content.data}
-                        onChange={onChangeData}
-                        autoComplete="off"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        onBlur={()=>setEditable(false)}
-                    />
-                    : <p
-                        className='text-content'
-                        style={{height:"1.2rem", overflow:"hidden"}}
-                        onDoubleClick={()=>setEditable(true)}
-                    >{content.data}</p>
-            }
-            <ReactPlayer
-                width={"100%"}
-                height={"100px"}
-                light={true}
-                url={content.data}/>
+            <TextContent id={id} data={data} onChangeData={onChangeData} />
+            <ReactPlayer width={"100%"} height={"100px"} light={true} url={data}/>
         </>
     )
 }
 
-const ImageContent = ({ content, onChangeData })=>{
-    const [editable, setEditable] = useState( false )
-
+const ImageContent = ({id, data, onChangeData})=>{
     return(
         <>
-            {
-                editable ?  <textarea
-                    className='nodrag nowheel text-content'
-                    name={content.id}
-                    placeholder="add some text..."
-                    value={content.data}
-                    onChange={onChangeData}
-                    autoComplete="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    onBlur={()=>setEditable(false)}
-                />
-                : <p
-                    className='text-content'
-                    style={{height:"1.2rem", width: "100%", overflow:"hidden"}}
-                    onDoubleClick={()=>setEditable(true)}
-                >{content.data}</p>
-            }
-            <img src={content.data} style={{
-                width: "100%", maxHeight:"100px",
-                display: "block", padding: 10,
-                boxSizing:"border-box"
-            }}/>
+            <TextContent id={id} data={data} onChangeData={onChangeData} />
+            <img src={data} />
         </>
     )
 }
@@ -141,6 +90,7 @@ const TextContent = ({ id, data, onChangeData })=>{
             {
                 editable
                     ?  <textarea
+                        autoFocus={editable}
                         className='nodrag nowheel text-content'
                         placeholder="add some text..."
                         autoComplete="off"
@@ -160,38 +110,20 @@ const TextContent = ({ id, data, onChangeData })=>{
     )
 }
 
-const FileContent = ({ content, onChangeData })=>{
-    const [editable, setEditable] = useState( false )
-    
+const FileContent = ({ id, data, onChangeData })=>{
     return(
         <>
-            {
-                editable
-                    ?  <textarea
-                        className='nodrag nowheel text-content'
-                        name={content.id}
-                        placeholder="add some text..."
-                        value={content.data}
-                        onChange={onChangeData}
-                        autoComplete="off"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        onBlur={()=>setEditable(false)}
-                    />
-                    : <p
-                        className='text-content'
-                        onDoubleClick={()=>setEditable(true)}
-                    >{content.data}</p>
-            }
+            <TextContent id={id} data={data} onChangeData={onChangeData} />
         </>
     )
 }
 
-const OptionContent = ({content,onChangeData })=>{
+const OptionContent = ({id, data, onChangeData })=>{
+    const handleId = id.replace("content","handle")
     return (
         <>
-            <TextContent content={content} onChangeData={onChangeData} />
-            <Handle type="source" position={Position.Right} id={content.id}/>
+            <TextContent id={id} data={data} onChangeData={onChangeData} />
+            <Handle type="source" id={handleId} position={Position.Right}  />
         </>
     )
 }
@@ -217,25 +149,13 @@ const MoveContentBar = memo( ({moveCallback}) => {
     )
 })
 
-// content: {type:"", id:"", data:""}
-const DataContent =  ({
-    id,
-    type,
-    data,
-    moveContentCallback,
-    editDataCallback
-}) => {
+// content: { type:"", id:"", data:"" }
+const DataContent =  ({ id, type, data, onMove, onEdit }) => {
 
-    const moveCallback = useCallback( value =>
-        moveContentCallback( id )( value ),
-        [ moveContentCallback, id ]
-    )
-    const onChangeData = useCallback( value =>
-        editDataCallback( id )( value ),
-        [id]
-    )
+    const moveCallback = useCallback( value => onMove(id)(value), [id, onMove])
+    const onChangeData = useCallback( value => onEdit(id)(value), [id, onEdit])
 
-    return(
+    return (
         <>
             <MoveContentBar moveCallback={ moveCallback } />
             <div className='data-info'>
@@ -251,4 +171,4 @@ const DataContent =  ({
 }
 
 export default memo(DataContent)
-export {NodeTitle, InsertContentBar };
+export { NodeTitle, InsertContentBar };

@@ -9,13 +9,11 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-      <div style={{ width: '100vw', height: '100vh' }}>
-          <ReactFlowProvider>
+    <React.StrictMode>
+        <ReactFlowProvider>
               <App />
-          </ReactFlowProvider>
-      </div>
-  </React.StrictMode>
+        </ReactFlowProvider>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

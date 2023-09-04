@@ -47,7 +47,7 @@
   opacity: 0;
 }
 .data-content:hover {
-  background-color: gray;
+  background-color: #444;
 }
 
 .data-content:hover .edit-content-bar,
@@ -98,7 +98,6 @@
 
 
 .text-content{
-  background-color: gray;
   all: unset;
   border: none;
   width: 100%;
@@ -113,6 +112,7 @@
   font-size: 0.7rem;
   transition: background-color 0.5s;
 }
+
 .data-info{
   width: 100%;
   overflow: hidden;
@@ -129,14 +129,27 @@
   height: 5rem;
 }
 
+.data-info img{
+  width: 100%;
+  max-height: 100px;
+  display: block;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .data-info label{
   font-size: 0.7rem;
   color: #AAA;
 }
 
-
-.field{
+.node-title{
   position: relative;
   margin: 0.5rem 0px;
+}
+.node-title input{
+  all:unset;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 

@@ -4,7 +4,7 @@ import { create } from 'zustand'
 import {initialNodes,initialEdges, DEFAULT_EDGE, DEFAULT_NODE} from './initialData'
 
 const flowLocalKey = 'flow'
-const getNodeId = () => `randomnode${+new Date()}`
+const getId = (type) => `${type}${+new Date()}`
 
 export const useStore = create((set, get) => ({
     nodes: initialNodes,
@@ -14,11 +14,10 @@ export const useStore = create((set, get) => ({
         set({ nodes })
     },
     onEdgesChange(changes) {
-        console.log(changes)
         const edges = applyEdgeChanges( changes, get().edges )
         set({ edges })
     },
-    // move x position of special nodes
+    // move x position of all special nodes
     onNodeDragStop(e,node){
         const isMain = node.id.startsWith("main") 
         const isFirst = node.id.startsWith("first") 
@@ -35,31 +34,52 @@ export const useStore = create((set, get) => ({
         set({ nodes })
     },
     addEdge(data) {
-        const id = getNodeId()
+        const id = getId("edge")
         const edge = { ...DEFAULT_EDGE, ...data, id }
         const edges = [ ...get().edges, edge ]
         set({ edges })
     },
-    createNode() {
+    createNode( position ){
         const nodes = get().nodes
-        const position = { x:0, y:0 }
-        const selected = nodes.find(n=>n.selected)
-        
-        if( selected ) {
-            position.x = selected.position.x + 300
-            position.y = selected.position.y
-        }        
-
+        const selectedNode = nodes.find( n => n.selected )
         const node = {
             ...DEFAULT_NODE,
-            id: getNodeId(),
-            data: {
-                title:`node ${nodes.length}`,
-                contentsCollection:[]
-            },
-            position
+            id: getId("node"),
+            data: { title:"", contentsCollection:[] },
+        }
+        if( selectedNode ){
+            node.position = {
+                x: selectedNode.position.x + 300,
+                y: selectedNode.position.y
+            }
+        } else if( position ) {
+            node.position = position
+        }else{
+            node.position = { x: 0, y: 0 }
         }
         set({ nodes: [...nodes, node ] })
+    },
+    createNodeOption( position, edgeDetails ) {
+        const { nodes, edges } = get()
+        const node = {
+            ...DEFAULT_NODE,
+            id: getId("node"),
+            data: { title:"", contentsCollection:[] },
+            position
+        }
+        const edge = {
+            ...DEFAULT_EDGE,
+            ...edgeDetails,
+            id: getId("edge"),
+            target: node.id,
+            targetHandle: node.id
+        }
+        // check if some edge already has the same source handle
+        const isHandlerAvaible = !edges.find(
+            ed => ed.sourceHandle === edge.sourceHandle
+        )
+        if( isHandlerAvaible )
+            set({ nodes: [...nodes, node ], edges: [...edges, edge] })
     },
     saveLocal( rfInstance ){
         if(!rfInstance) return
@@ -84,7 +104,7 @@ export const useStore = create((set, get) => ({
     // content related functions
     //
     addContent(parentID, type, contentId){
-        const handleID = getNodeId()
+        const id = getId("content")
         const nodes = get().nodes.map( node =>{
             if( node.id !== parentID) return node
             const prevCC = node.data.contentsCollection
@@ -93,7 +113,7 @@ export const useStore = create((set, get) => ({
                 ? prevCC.findIndex( content => (content.id === contentId) )
                 : -1
 
-            const content = { type, id: handleID, data: "" }
+            const content = { type, id, data: "" }
             const contentsCollection = prevCC.toSpliced( index + 1, 0, content )
             return{ ...node, data: {...node.data, contentsCollection} }
         })
@@ -134,20 +154,21 @@ export const useStore = create((set, get) => ({
             const contentsCollection = prevCC.toSpliced( index, 1)
             return { ...node, data: {...node.data, contentsCollection} }
         })
-        set({ nodes })
+        const handleId = contentId.replace("content","handle")
+        const edges = get().edges.filter(edg => edg.sourceHandle != handleId )
+        set({ nodes, edges })
     },
     updateNodeContent(id, contentId, data) {
         const nodes = get().nodes.map( node =>{
-            if( node.id !== id ) return node
-
-            const prevCC = node.data.contentsCollection
-            const contentsCollection = prevCC.map( prevContent => {
-                // content { id:"", type:"", data:""}
-                if( prevContent.id !== contentId ) return prevContent
-                return { ...prevContent, data }
-            })
-
-            return { ...node, data: { ...node.data, contentsCollection } }
+            // update content data
+            if( node.id != id ) return node
+                const prevCC = node.data.contentsCollection
+                const contentsCollection = prevCC.map( prevContent => {
+                    // content { id:"", type:"", data:""}
+                    if( prevContent.id !== contentId ) return prevContent
+                    return { ...prevContent, data }
+                })
+                return { ...node, data: { ...node.data, contentsCollection } }
         })
         set({ nodes })
     },

@@ -3,7 +3,8 @@ import {MarkerType} from 'reactflow'
 const DEFAULT_X_POS = -1000;
 
 export const DEFAULT_EDGE = {
-    strokeWidth: 2,
+    type: "smoothstep",
+    strokeWidth: 5,
     animated: true,
     markerEnd: {
         type: MarkerType.ArrowClosed,
