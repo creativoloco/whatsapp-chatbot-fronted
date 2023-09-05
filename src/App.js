@@ -73,7 +73,6 @@ const Flow = () => {
             x: left + (right - left)/2,
             y: top + (bottom-top)/2
         }
-        const vp = rfInstance.getViewport()
         store.createNode(project(position))
     }, [rfInstance])
 
