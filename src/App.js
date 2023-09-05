@@ -25,7 +25,7 @@ const selector = (store) => ({
 
 const nodeTypes = {MessagesNodeType}
 
-const SaveRestore = () => {
+const Flow = () => {
 
     const store = useStore(selector)
     const [rfInstance, setRfInstance] = useState(null)
@@ -36,7 +36,7 @@ const SaveRestore = () => {
     const onConnectStart = useCallback((mouseEvent, params) => {
         onConnectStartParams.current = params
     }, [])
-    
+
     const isValidConnection = useCallback( edge =>{
         return !store.edges.find( e=> e.sourceHandle === edge.sourceHandle )
     }, [store.edges])
@@ -107,6 +107,6 @@ const SaveRestore = () => {
 
 export default () => (
     <ReactFlowProvider>
-        <SaveRestore />
+        <Flow />
     </ReactFlowProvider>
 )
