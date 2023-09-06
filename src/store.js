@@ -1,10 +1,11 @@
 import { applyNodeChanges, applyEdgeChanges } from 'reactflow'
 import { create } from 'zustand'
+import { nanoid } from 'nanoid'
 
 import {initialNodes,initialEdges, DEFAULT_EDGE, DEFAULT_NODE} from './initialData'
 
 const flowLocalKey = 'flow'
-const getId = (type) => `${type}${+new Date()}`
+const getId = (type) => `${type}${nanoid()}`
 
 export const useStore = create((set, get) => ({
     nodes: initialNodes,
