@@ -14,13 +14,13 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 App.js
-badd +49 components/ContentType.js
+badd +109 App.js
+badd +1 components/ContentType.js
 badd +1 nodes/Messages.js
 badd +1 store.js
 badd +1 initialData.js
 badd +1 components/content-type.css
-badd +1 App.css
+badd +1 index.js
 argglobal
 %argdel
 $argadd App.js
@@ -48,7 +48,7 @@ set winwidth=1
 exe 'vert 1resize ' . ((&columns * 90 + 90) / 181)
 exe 'vert 2resize ' . ((&columns * 90 + 90) / 181)
 argglobal
-balt App.css
+balt index.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -58,16 +58,21 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
+35,51fold
+57,60fold
+62,70fold
 let &fdl = &fdl
-let s:l = 23 - ((22 * winheight(0) + 23) / 46)
+57
+normal! zo
+let s:l = 20 - ((12 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 23
-normal! 017|
+keepjumps 20
+normal! 018|
 wincmd w
 argglobal
-if bufexists(fnamemodify("App.css", ":p")) | buffer App.css | else | edit App.css | endif
+if bufexists(fnamemodify("index.js", ":p")) | buffer index.js | else | edit index.js | endif
 balt App.js
 setlocal fdm=manual
 setlocal fde=0
@@ -79,12 +84,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 13 - ((12 * winheight(0) + 23) / 46)
+let s:l = 9 - ((8 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 13
-normal! 015|
+keepjumps 9
+normal! 0
 wincmd w
 exe 'vert 1resize ' . ((&columns * 90 + 90) / 181)
 exe 'vert 2resize ' . ((&columns * 90 + 90) / 181)
@@ -120,37 +125,37 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-8,15fold
-20,50fold
-52,59fold
-61,92fold
-94,94fold
-94,124fold
-126,161fold
-163,188fold
-190,197fold
-199,218fold
-241,248fold
-221,251fold
+7,14fold
+16,45fold
+47,55fold
+57,64fold
+66,66fold
+66,73fold
+75,111fold
+113,119fold
+121,129fold
+131,150fold
+161,168fold
+153,171fold
 let &fdl = &fdl
-94
+47
 normal! zo
-94
+66
 normal! zo
-94
+66
 normal! zc
-126
+75
 normal! zo
-221
+153
 normal! zo
-241
+161
 normal! zo
-let s:l = 135 - ((115 * winheight(0) + 23) / 46)
+let s:l = 56 - ((53 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 135
-normal! 047|
+keepjumps 56
+normal! 0
 wincmd w
 argglobal
 if bufexists(fnamemodify("~/code/whatsapp-chatbot-fronted/src/components/content-type.css", ":p")) | buffer ~/code/whatsapp-chatbot-fronted/src/components/content-type.css | else | edit ~/code/whatsapp-chatbot-fronted/src/components/content-type.css | endif
@@ -165,12 +170,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 106 - ((8 * winheight(0) + 23) / 46)
+let s:l = 145 - ((35 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 106
-normal! 0
+keepjumps 145
+normal! 012|
 wincmd w
 exe 'vert 1resize ' . ((&columns * 90 + 90) / 181)
 exe 'vert 2resize ' . ((&columns * 90 + 90) / 181)
@@ -187,12 +192,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 53 - ((37 * winheight(0) + 23) / 46)
+let s:l = 20 - ((19 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 53
-normal! 041|
+keepjumps 20
+normal! 0
 tabnext
 edit ~/code/whatsapp-chatbot-fronted/src/store.js
 let s:save_splitbelow = &splitbelow
@@ -224,13 +229,26 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
+12,15fold
+17,20fold
+23,37fold
+39,44fold
+46,65fold
+67,88fold
+90,94fold
+96,106fold
+113,128fold
+130,154fold
+156,169fold
+171,184fold
+186,193fold
 let &fdl = &fdl
-let s:l = 140 - ((23 * winheight(0) + 23) / 46)
+let s:l = 46 - ((43 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 140
-normal! 09|
+keepjumps 46
+normal! 01|
 wincmd w
 argglobal
 if bufexists(fnamemodify("~/code/whatsapp-chatbot-fronted/src/initialData.js", ":p")) | buffer ~/code/whatsapp-chatbot-fronted/src/initialData.js | else | edit ~/code/whatsapp-chatbot-fronted/src/initialData.js | endif
@@ -245,16 +263,16 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 33 - ((0 * winheight(0) + 23) / 46)
+let s:l = 7 - ((6 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 33
-normal! 0
+keepjumps 7
+normal! 018|
 wincmd w
 exe 'vert 1resize ' . ((&columns * 90 + 90) / 181)
 exe 'vert 2resize ' . ((&columns * 90 + 90) / 181)
-tabnext 2
+tabnext 4
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

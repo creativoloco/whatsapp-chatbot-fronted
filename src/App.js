@@ -14,12 +14,9 @@ const nodeTypes = {MessagesNodeType}
 
 const Flow = () => {
     const {
-        addEdge,
-        nodes, edges,
-        onNodesChange, onEdgesChange,
-        createNode, createNodeOption,
+        edges, onEdgesChange, addEdge,
+        nodes, onNodesChange, createNode, createNodeOption, onNodeDragStop,
         saveLocal, restoreLocal,
-        onNodeDragStop,
     } = useStore()
 
     const [rfInstance, setRfInstance] = useState(null)
@@ -29,15 +26,17 @@ const Flow = () => {
 
     const onConnectStart = useCallback((mouseEvent, params) => 
         onConnectStartParams.current = params
-        , [])
+        , [onConnectStartParams])
 
     const isValidConnection = useCallback( edge =>
         !edges.find( e=> e.sourceHandle === edge.sourceHandle )
         , [edges])
 
     const onConnectEnd = useCallback( mouseEvent => {
-        if( !mouseEvent.target.classList.contains('react-flow__pane') ) return
-        if( onConnectStartParams.current.handleType != "source") return
+        if(
+            !mouseEvent.target.classList.contains('react-flow__pane') ||
+            onConnectStartParams.current.handleType != "source"
+        ) return
         const { top, left } = reactFlowContainer.current.getBoundingClientRect()
         const position = project( {
             x: mouseEvent.clientX - left,

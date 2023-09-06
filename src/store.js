@@ -13,10 +13,12 @@ export const useStore = create((set, get) => ({
         const nodes = applyNodeChanges( changes, get().nodes)
         set({ nodes })
     },
+
     onEdgesChange(changes) {
         const edges = applyEdgeChanges( changes, get().edges )
         set({ edges })
     },
+    
     // move x position of all special nodes
     onNodeDragStop(e,node){
         const isMain = node.id.startsWith("main") 
@@ -33,12 +35,14 @@ export const useStore = create((set, get) => ({
         })
         set({ nodes })
     },
+    
     addEdge(data) {
         const id = getId("edge")
         const edge = { ...DEFAULT_EDGE, ...data, id }
         const edges = [ ...get().edges, edge ]
         set({ edges })
     },
+
     createNode( position ){
         const nodes = get().nodes
         const selectedNode = nodes.find( n => n.selected )
@@ -59,6 +63,7 @@ export const useStore = create((set, get) => ({
         }
         set({ nodes: [...nodes, node ] })
     },
+
     createNodeOption( position, edgeDetails ) {
         const { nodes, edges } = get()
         const node = {
@@ -81,11 +86,13 @@ export const useStore = create((set, get) => ({
         if( isHandlerAvaible )
             set({ nodes: [...nodes, node ], edges: [...edges, edge] })
     },
+
     saveLocal( rfInstance ){
         if(!rfInstance) return
         const flow = rfInstance.toObject()
         localStorage.setItem( flowLocalKey, JSON.stringify(flow) )
     },
+
     restoreLocal (){
         const localData = localStorage.getItem(flowLocalKey)
         const flow = JSON.parse( localData )
@@ -119,6 +126,7 @@ export const useStore = create((set, get) => ({
         })
         set({ nodes })
     },
+
     moveContent(nodeID, contentId, moveTo){
         const nodes = get().nodes.map( node =>{
             if(node.id !== nodeID) return node
@@ -144,6 +152,7 @@ export const useStore = create((set, get) => ({
 
         set({ nodes })
     },
+
     removeContent( id, contentId ){
         const nodes = get().nodes.map(node =>{
             if(node.id != id) return node
@@ -158,6 +167,7 @@ export const useStore = create((set, get) => ({
         const edges = get().edges.filter(edg => edg.sourceHandle != handleId )
         set({ nodes, edges })
     },
+
     updateNodeContent(id, contentId, data) {
         const nodes = get().nodes.map( node =>{
             // update content data
@@ -172,6 +182,7 @@ export const useStore = create((set, get) => ({
         })
         set({ nodes })
     },
+
     updateNodeTitle(id, title) {
         const nodes = get().nodes.map( node =>
             (node.id === id)
