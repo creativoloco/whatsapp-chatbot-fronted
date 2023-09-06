@@ -10,36 +10,30 @@ import {useStore} from './store'
 
 import MessagesNodeType from './nodes/Messages'
 
-const selector = (store) => ({
-    nodes: store.nodes,
-    edges: store.edges,
-    onNodesChange: store.onNodesChange,
-    onEdgesChange: store.onEdgesChange,
-    onNodeDragStop: store.onNodeDragStop,
-    addEdge: store.addEdge,
-    createNode: store.createNode,
-    createNodeOption: store.createNodeOption,
-    saveLocal: store.saveLocal,
-    restoreLocal: store.restoreLocal,
-})
-
 const nodeTypes = {MessagesNodeType}
 
 const Flow = () => {
+    const {
+        addEdge,
+        nodes, edges,
+        onNodesChange, onEdgesChange,
+        createNode, createNodeOption,
+        saveLocal, restoreLocal,
+        onNodeDragStop,
+    } = useStore()
 
-    const store = useStore(selector)
     const [rfInstance, setRfInstance] = useState(null)
     const {setViewport, project} = useReactFlow()
     const reactFlowContainer = useRef()
     const onConnectStartParams = useRef()
 
-    const onConnectStart = useCallback((mouseEvent, params) => {
+    const onConnectStart = useCallback((mouseEvent, params) => 
         onConnectStartParams.current = params
-    }, [])
+        , [])
 
-    const isValidConnection = useCallback( edge =>{
-        return !store.edges.find( e=> e.sourceHandle === edge.sourceHandle )
-    }, [store.edges])
+    const isValidConnection = useCallback( edge =>
+        !edges.find( e=> e.sourceHandle === edge.sourceHandle )
+        , [edges])
 
     const onConnectEnd = useCallback( mouseEvent => {
         if( !mouseEvent.target.classList.contains('react-flow__pane') ) return
@@ -53,16 +47,16 @@ const Flow = () => {
             source: onConnectStartParams.current.nodeId,
             sourceHandle: onConnectStartParams.current.handleId,
         }
-        store.createNodeOption( position, edgeDetails )
+        createNodeOption( position, edgeDetails )
 
-    }, [ project, store.createNodeOption, reactFlowContainer, onConnectStartParams] )
+    }, [ project, createNodeOption, reactFlowContainer, onConnectStartParams] )
 
-    const onSaveLocal = useCallback(() => {
-        store.saveLocal(rfInstance)
-    }, [rfInstance])
+    const onSaveLocal = useCallback(() => 
+        saveLocal(rfInstance)
+        , [rfInstance])
 
     const onRestoreLocal = useCallback(() => {
-        const {x = 0, y = 0, zoom = 1} = store.restoreLocal()
+        const {x = 0, y = 0, zoom = 1} = restoreLocal()
         setViewport({x, y, zoom})
     }, [rfInstance])
 
@@ -73,18 +67,18 @@ const Flow = () => {
             x: left + (right - left)/2,
             y: top + (bottom-top)/2
         }
-        store.createNode(project(position))
+        createNode(project(position))
     }, [rfInstance])
 
     return (
         <div ref={reactFlowContainer} style={{width: '100vw', height: '100vh'}}>
             <ReactFlow
-                nodes={store.nodes}
-                edges={store.edges}
-                onNodesChange={store.onNodesChange}
-                onEdgesChange={store.onEdgesChange}
-                onNodeDragStop={store.onNodeDragStop}
-                onConnect={store.addEdge}
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onNodeDragStop={onNodeDragStop}
+                onConnect={addEdge}
                 onConnectStart = { onConnectStart }
                 onConnectEnd = { onConnectEnd }
                 isValidConnection={isValidConnection}
