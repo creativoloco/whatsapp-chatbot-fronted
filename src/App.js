@@ -50,9 +50,7 @@ const Flow = () => {
 
     }, [ project, createNodeOption, reactFlowContainer, onConnectStartParams] )
 
-    const onSaveLocal = useCallback(() => 
-        saveLocal(rfInstance)
-        , [rfInstance])
+    const onSaveLocal = useCallback(() => saveLocal(rfInstance) , [rfInstance])
 
     const onRestoreLocal = useCallback(() => {
         const {x = 0, y = 0, zoom = 1} = restoreLocal()

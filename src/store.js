@@ -20,8 +20,8 @@ export const useStore = create((set, get) => ({
         set({ edges })
     },
     
-    // move x position of all special nodes
     onNodeDragStop(e,node){
+    // move x position of all special nodes
         const isMain = node.id.startsWith("main") 
         const isFirst = node.id.startsWith("first") 
         const type = isMain ? "main" : (isFirst ? "first" : null)
