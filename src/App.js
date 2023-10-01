@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import ReactFlow, {
     Background, Controls, Panel, ReactFlowProvider,
     useReactFlow
@@ -85,13 +85,78 @@ const Flow = () => {
             >
                 <Panel position="top-right">
                     <button onClick={onCreateNode}>add node </button>
-                    <button onClick={onSaveLocal}>save local </button>
+                    <SavePanel 
+                        edges={edges}
+                        nodes={nodes}
+                        onSaveLocal={onSaveLocal}
+                    />
                     <button onClick={onRestoreLocal}>restore local </button>
                 </Panel>
                 <Controls />
                 <Background />
             </ReactFlow>
         </div>
+    )
+}
+
+const SavePanel = ( {edges, nodes, onSaveLocal} ) => {
+    const [ isSaved, setSaved ]  = useState( true )
+    const [ autoSave, setAutoSave ] = useState( false )
+    const [ inCloud, setInCloud] = useState( false )
+
+    // local saving
+    useEffect(()=>{
+        let saveTimeoutId
+
+        // every dependency change will alter saved status
+        setSaved(false)
+        setInCloud(false)
+        
+        // set timeout to avoid multiple calls to onSave function
+        if( autoSave ) saveTimeoutId = setTimeout( ()=>onSave() ,1000)
+
+        // cleanup useEffect 
+        return ()=> saveTimeoutId && clearTimeout(saveTimeoutId)
+    },[ edges, nodes, autoSave])
+
+
+    // cloud saving
+    useEffect(()=>{
+        // cloudTID: cloud timeout id
+        let cloudTID
+        if( isSaved )
+            cloudTID = setTimeout( ()=>{
+
+                //
+                //
+                // @todo SAVE ON CLOUD METHOD
+                console.log("cloud saving")
+                //
+                //
+
+                setInCloud(true)
+            }, 2000)
+        
+        return ()=> cloudTID && clearTimeout(cloudTID)
+    },[isSaved])
+    
+    const onSave = useCallback(()=>{
+        onSaveLocal()
+        setSaved(true)
+    },[])
+
+    const toogleAutosave = useCallback(()=> setAutoSave(prevState => !prevState))
+
+    return (
+        <>
+            <button onClick={toogleAutosave}>{autoSave ? "🔒":" 🔓"}</button>
+            <button onClick={onSave} disabled={isSaved || autoSave}>
+                {
+                    isSaved ?
+                        `saved ${ inCloud ? '🔷 cloud': '🔶local'}` :
+                        "♦️  save"
+                }</button>
+        </>
     )
 }
 

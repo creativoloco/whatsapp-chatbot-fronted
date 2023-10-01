@@ -88,6 +88,10 @@ export const useStore = create((set, get) => ({
             set({ nodes: [...nodes, node ], edges: [...edges, edge] })
     },
 
+
+
+    // save/restore local
+
     saveLocal( rfInstance ){
         if(!rfInstance) return
         const flow = rfInstance.toObject()
