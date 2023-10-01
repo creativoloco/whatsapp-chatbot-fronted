@@ -34,6 +34,8 @@
   border:1px solid green;
 }
 
-.react-flow__edge.selected{
-  border-color: green;
+.react-flow__edge.selected .react-flow__edge-path{
+  stroke: #00FF00;
+  stroke-dasharray: none;
+  stroke-width: 3;
 }

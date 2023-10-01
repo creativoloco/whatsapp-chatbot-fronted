@@ -7,12 +7,28 @@ import {initialNodes,initialEdges, DEFAULT_EDGE, DEFAULT_NODE} from './initialDa
 const flowLocalKey = 'flow'
 const getId = (type) => `${type}${nanoid()}`
 
+const selectConnectedEdges = (changes, edges)=>{
+    let change = changes.find( ch => 
+        ( ch.type === "select" && typeof ch.selected === "boolean" && ch.selected )
+    )
+
+    if( !change ) return
+
+    const edgesChanges = edges
+        .filter( edge => edge.target === change.id || edge.source === change.id)
+        .map( edge => ({ id:edge.id, type: "select", selected: change.selected }))
+
+    return applyEdgeChanges( edgesChanges, edges )
+}
+
+
 export const useStore = create((set, get) => ({
     nodes: initialNodes,
     edges: initialEdges,
     onNodesChange(changes) {
         const nodes = applyNodeChanges( changes, get().nodes)
-        set({ nodes })
+        const edges = selectConnectedEdges( changes, get().edges)
+        set( edges ? { nodes, edges } : { nodes } )
     },
 
     onEdgesChange(changes) {
