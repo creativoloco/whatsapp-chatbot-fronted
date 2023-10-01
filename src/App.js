@@ -67,6 +67,19 @@ const Flow = () => {
         createNode(project(position))
     }, [rfInstance])
 
+    const onLoadFromFile = useCallback((e)=>{
+        console.log(e)
+        const f = e.target.files[0]
+        if (f) {
+            var r = new FileReader();
+            r.onload = (e)=>{
+                localStorage.setItem("flow",e.target.result)
+                console.log("ok")
+            }
+            r.readAsText(f);
+        }
+    },[])
+
     return (
         <div ref={reactFlowContainer} style={{width: '100vw', height: '100vh'}}>
             <ReactFlow
@@ -91,6 +104,7 @@ const Flow = () => {
                         onSaveLocal={onSaveLocal}
                     />
                     <button onClick={onRestoreLocal}>restore local </button>
+                    <input type="file" onChange={ onLoadFromFile } />
                 </Panel>
                 <Controls />
                 <Background />
