@@ -13,11 +13,16 @@ import MessagesNodeType from './nodes/Messages'
 const nodeTypes = {MessagesNodeType}
 
 const Flow = () => {
-    const {
-        edges, onEdgesChange, addEdge,
-        nodes, onNodesChange, createNode, createNodeOption, onNodeDragStop,
-        saveLocal, restoreLocal,
-    } = useStore()
+    const edges = useStore(store=>store.edges)
+    const onEdgesChange = useStore(store=>store.onEdgesChange)
+    const addEdge = useStore(store=>store.addEdge)
+    const nodes = useStore(store=>store.nodes)
+    const onNodesChange = useStore(store=>store.onNodesChange)
+    const createNode = useStore(store=>store.createNode)
+    const createNodeOption = useStore(store=>store.createNodeOption)
+    const onNodeDragStop = useStore(store=>store.onNodeDragStop)
+    const saveLocal = useStore(store=>store.saveLocal)
+    const restoreLocal = useStore(store=>store.restoreLocal)
 
     const [rfInstance, setRfInstance] = useState(null)
     const {setViewport, project} = useReactFlow()
