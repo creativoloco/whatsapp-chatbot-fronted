@@ -153,3 +153,68 @@
   text-overflow: ellipsis;
 }
 
+
+/*
+ * FlagButton ribbon effect
+ */
+
+.flag-button{
+  all: unset;
+  font-size: .5rem;
+  height: 1rem;
+  color: #bbb;
+  position: absolute;
+  right: -1rem;
+  top: -2px;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: .1rem .5rem .1rem .25rem;
+  margin: 0px;
+  background-color: #555;
+  border-radius: 0px 0px 0px 5px;
+  box-shadow: -2px 2px 5px #0005;
+  transition: background-color,border  250ms;
+}
+.flag-button:before{
+  content:"";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -.5rem;
+  width: 0;
+  height: 0;
+  border-top: .5rem solid #555;
+  border-bottom: .5rem solid #555;
+  border-right: .5rem solid transparent;
+  border-left: .5rem solid transparent;
+}
+.flag-button:after{
+  content:"";
+  height: 0;
+  width: 0;
+  display:block;
+  position:absolute;
+  bottom: -.5rem;
+  right: 0px;
+  border-top: .5rem solid #444;
+  border-right: .25rem solid transparent;
+}
+.flag-button:hover:before,
+.flag-button.flagged:before{
+  border-top: .5rem solid green;
+  border-bottom: .5rem solid green;
+}
+
+.flag-button:hover {
+  background-color: green;
+}
+
+.flag-button.flagged{
+  color: white;
+  background-color: green;
+}
+
+.flag-button.flagged:hover{
+  background-color: green;
+}
+

@@ -25,6 +25,8 @@ const selectConnectedEdges = (changes, edges)=>{
 export const useStore = create((set, get) => ({
     nodes: initialNodes,
     edges: initialEdges,
+    flags: [],
+
     onNodesChange(changes) {
         const nodes = applyNodeChanges( changes, get().nodes)
         const edges = selectConnectedEdges( changes, get().edges)
@@ -212,4 +214,16 @@ export const useStore = create((set, get) => ({
         )
         set({ nodes })
     },
+
+    isFlagged ( optionContentId ){
+        return  get().flags.includes( optionContentId )
+    },
+
+    toogleFlag( optionContentId ){
+        const prevFlags = get().flags
+        const flags = ( prevFlags.includes(optionContentId) )
+            ?  prevFlags.filter(f=>f!==optionContentId)
+            : [...prevFlags, optionContentId]
+        set( { flags } )
+    }
 }))
