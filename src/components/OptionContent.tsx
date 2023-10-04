@@ -11,14 +11,12 @@ const FlagButton = () => {
     const isFlagged = useStore( store => store.isFlagged(id) )
     const onFlag = () => toogleFlag( id ) 
     return (
-        <>
             <button
                 className={ `flag-button${isFlagged? " flagged":""}` }
                 onClick={onFlag}
             >
                 {isFlagged ? "marked" : "mark" }
             </button>
-        </>
     )
 }
 
